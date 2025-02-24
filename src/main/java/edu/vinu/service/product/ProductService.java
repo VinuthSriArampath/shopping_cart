@@ -1,14 +1,16 @@
 package edu.vinu.service.product;
 
 import edu.vinu.model.Product;
+import edu.vinu.request.AddProductRequest;
+import edu.vinu.request.UpdateProductRequest;
 
 import java.util.List;
 
 public interface ProductService {
-    Product addProduct(Product product);
+    Product addProduct(AddProductRequest product);
     Product getProductById(Long id);
     void deleteProductById(Long id);
-    void updateProduct(Product product,Long id);
+    Product updateProduct(UpdateProductRequest request, Long id);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(String category);
     List<Product> getProductsByBrand(String brand);
