@@ -1,8 +1,13 @@
 spring:
+  application:
+    name: shopping-cart
   datasource:
     url: ${DB_URL}?createDatabaseIfNotExist=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
+    show-sql: true
+    properties:
+      format_sql: true
     hibernate:
       ddl-auto: update
