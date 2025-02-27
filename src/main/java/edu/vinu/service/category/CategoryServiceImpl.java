@@ -1,7 +1,7 @@
 package edu.vinu.service.category;
 
 import edu.vinu.exception.AlreadyExistsException;
-import edu.vinu.exception.ResourceNotFound;
+import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Category;
 import edu.vinu.repository.category.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow( () -> new ResourceNotFound("Category Not Found"));
+                .orElseThrow( () -> new ResourceNotFoundException("Category Not Found"));
     }
 
     @Override
@@ -41,13 +41,13 @@ public class CategoryServiceImpl implements CategoryService{
         return Optional.ofNullable(getCategoryById(id)).map(oldCategory -> {
             oldCategory.setName(category.getName());
             return categoryRepository.save(oldCategory);
-        }).orElseThrow(()->new ResourceNotFound("Category not found!"));
+        }).orElseThrow(()->new ResourceNotFoundException("Category not found!"));
     }
 
     @Override
     public void deleteCategoryById(Long id) {
         categoryRepository.findById(id).ifPresentOrElse(categoryRepository::delete, ()-> {
-            throw new ResourceNotFound("Category not Found");
+            throw new ResourceNotFoundException("Category not Found");
         });
     }
 }

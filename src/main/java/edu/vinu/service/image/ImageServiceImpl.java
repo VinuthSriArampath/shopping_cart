@@ -2,7 +2,7 @@ package edu.vinu.service.image;
 
 import edu.vinu.dto.ImageDto;
 import edu.vinu.exception.CrudException;
-import edu.vinu.exception.ResourceNotFound;
+import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Image;
 import edu.vinu.model.Product;
 import edu.vinu.repository.image.ImageRepository;
@@ -25,13 +25,13 @@ public class ImageServiceImpl implements ImageService {
     private final ProductService productService;
     @Override
     public Image getImageById(Long id) {
-        return imageRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Image not found with id : " + id));
+        return imageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Image not found with id : " + id));
     }
 
     @Override
     public void deleteImageById(Long id) {
         imageRepository.findById(id).ifPresentOrElse(imageRepository::delete,() -> {
-            throw new ResourceNotFound("Image not found with id : " + id);
+            throw new ResourceNotFoundException("Image not found with id : " + id);
         });
     }
 
