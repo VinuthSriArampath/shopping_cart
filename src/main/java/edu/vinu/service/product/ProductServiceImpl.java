@@ -1,13 +1,18 @@
 package edu.vinu.service.product;
 
+import edu.vinu.dto.ImageDto;
+import edu.vinu.dto.ProductDto;
 import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Category;
+import edu.vinu.model.Image;
 import edu.vinu.model.Product;
 import edu.vinu.repository.category.CategoryRepository;
+import edu.vinu.repository.image.ImageRepository;
 import edu.vinu.repository.product.ProductRepository;
 import edu.vinu.request.AddProductRequest;
 import edu.vinu.request.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +23,8 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final ImageRepository imageRepository;
+    private final ModelMapper modelMapper;
 
     private final String productNotFound="Product not found!";
     @Override
@@ -112,5 +119,21 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Long countProductsByBrandAndName(String brand, String name) {
         return productRepository.countByBrandAndName(brand, name);
+    }
+    @Override
+    public List<ProductDto> getConvertedProducts(List<Product> products){
+        return products.stream()
+                .map(this::convertToDto)
+                .toList();
+    }
+    @Override
+    public ProductDto convertToDto(Product product){
+        ProductDto productDto= modelMapper.map(product, ProductDto.class);
+        List<Image> images = imageRepository.findByProductId(product.getId());
+        List<ImageDto> imageDtos = images.stream()
+                .map( image -> modelMapper.map(image, ImageDto.class))
+                .toList();
+        productDto.setImages(imageDtos);
+        return productDto;
     }
 }
