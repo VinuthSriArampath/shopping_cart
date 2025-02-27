@@ -51,7 +51,7 @@ public class ImageServiceImpl implements ImageService {
                 image.setImg(new SerialBlob(file.getBytes()));
                 image.setProduct(product);
 
-                String buildDownloadUrl = "api/v1/images/image/download/";
+                String buildDownloadUrl = "/api/v1/images/image/download/";
                 String downloadUrl = buildDownloadUrl+image.getId();
                 image.setDownloadUrl(downloadUrl);
                 Image savedImage = imageRepository.save(image);
@@ -60,8 +60,8 @@ public class ImageServiceImpl implements ImageService {
                 imageRepository.save(image);
 
                 ImageDto imageDto = new ImageDto();
-                imageDto.setImageId(savedImage.getId());
-                imageDto.setImageName(savedImage.getFileName());
+                imageDto.setId(savedImage.getId());
+                imageDto.setFilename(savedImage.getFileName());
                 imageDto.setDownloadUrl(savedImage.getDownloadUrl());
 
                 savedImageDto.add(imageDto);
