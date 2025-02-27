@@ -1,6 +1,6 @@
 package edu.vinu.service.product;
 
-import edu.vinu.exception.ProductNotFoundException;
+import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Category;
 import edu.vinu.model.Product;
 import edu.vinu.repository.category.CategoryRepository;
@@ -49,14 +49,14 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotFoundException(productNotFound));
+                .orElseThrow(() -> new ResourceNotFoundException(productNotFound));
     }
 
     @Override
     public void deleteProductById(Long id) {
         productRepository.findById(id)
                 .ifPresentOrElse(productRepository::delete,
-                        () -> {throw new ProductNotFoundException(productNotFound);});
+                        () -> {throw new ResourceNotFoundException(productNotFound);});
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService{
         return productRepository.findById(id)
                 .map(existingProduct -> updateExistingProduct(existingProduct,request))
                 .map(productRepository::save)
-                .orElseThrow(() -> new ProductNotFoundException(productNotFound));
+                .orElseThrow(() -> new ResourceNotFoundException(productNotFound));
     }
 
     private  Product updateExistingProduct(Product existingProduct, UpdateProductRequest request){
