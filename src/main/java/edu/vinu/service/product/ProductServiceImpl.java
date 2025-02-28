@@ -2,6 +2,7 @@ package edu.vinu.service.product;
 
 import edu.vinu.dto.ImageDto;
 import edu.vinu.dto.ProductDto;
+import edu.vinu.exception.AlreadyExistsException;
 import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Category;
 import edu.vinu.model.Image;
@@ -33,6 +34,10 @@ public class ProductServiceImpl implements ProductService{
 //        If yes, set it as a new product category
 //        If No, save it as a new category
 //        Then set it as the new product
+
+        if (Boolean.TRUE.equals(isProductExists(request.getName(),request.getBrand()))){
+            throw new AlreadyExistsException(request.getBrand()+" "+request.getName()+" already exists!,Update the product instead");
+        }
         Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
                 .orElseGet(() -> {
                     Category newCategory = new Category(request.getCategory().getName());
@@ -40,6 +45,10 @@ public class ProductServiceImpl implements ProductService{
                 });
         request.setCategory(category);
         return productRepository.save(createProduct(request,category));
+    }
+
+    private Boolean isProductExists(String name,String brand){
+        return productRepository.existsByNameAndBrand(name, brand);
     }
 
     private Product createProduct(AddProductRequest request, Category category){
