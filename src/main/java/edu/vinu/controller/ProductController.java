@@ -1,6 +1,7 @@
 package edu.vinu.controller;
 
 import edu.vinu.dto.ProductDto;
+import edu.vinu.exception.AlreadyExistsException;
 import edu.vinu.exception.ResourceNotFoundException;
 import edu.vinu.model.Product;
 import edu.vinu.request.AddProductRequest;
@@ -13,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @CrossOrigin
 @RestController
@@ -52,6 +52,8 @@ public class ProductController {
             return ResponseEntity.ok(new ApiResponse("Add product success",productDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse(e.getMessage(),null));
+        } catch (AlreadyExistsException e){
+            return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(),null));
         }
     }
 
